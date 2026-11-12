@@ -8,6 +8,9 @@ project's mapping infrastructure on a Windows computer. The PowerShell scripts i
 > repository root in **Windows PowerShell**. Every script is idempotent (safe to
 > re-run). Don't edit `infra/docker-compose.yml`; the scripts depend on it as-is.
 > If a step fails, read the `[FAIL]` / error message: each one says what to do.
+>
+> **Before running any script:** create or update `db/01_schema.sql` from the
+> server's TypeORM entities. See [Before you start: sync the schema file](#before-you-start-sync-the-schema-file).
 
 ---
 
@@ -56,6 +59,35 @@ bypass it for a single run:
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\Setup.ps1
 ```
+
+---
+
+## Before you start: sync the schema file
+
+The server's TypeORM entities (`server/src/entities/*.entity.ts`) are the source of
+truth for the database schema (`synchronize: true`). But the setup scripts create
+the tables from `db/01_schema.sql`, because the tables must exist before GeoServer
+can publish them, and the server may not have run yet.
+
+So **before running the scripts**, an AI assistant (e.g. Claude Code) must:
+
+1. Read every entity in `server/src/entities/`.
+2. **Create** `db/01_schema.sql` if it doesn't exist, or **update** it so it
+   matches the entities exactly:
+   - table and column names (the `name` in each `@Entity` / `@Column`)
+   - types and lengths (e.g. `VARCHAR(100)`, `INTEGER`, `DATE`, `BOOLEAN`)
+   - `NOT NULL` / nullable and `DEFAULT` values
+   - primary key and its constraint name (`primaryKeyConstraintName`)
+   - geometry columns with their type and SRID, e.g. `geometry(Polygon, 32636)`
+   - indexes with the same names (a spatial `@Index` becomes `USING GIST`)
+3. Keep the file safe to re-run: `CREATE EXTENSION IF NOT EXISTS postgis;`,
+   `CREATE TABLE IF NOT EXISTS`, `CREATE INDEX IF NOT EXISTS`.
+4. Check that `db/02_seed.sql` still matches the columns.
+
+**Why "exactly":** when the server starts, TypeORM compares the tables with the
+entities. Any difference makes it alter the table, and a different column type
+(such as the geometry) makes it **drop and recreate the column, losing its
+data**.
 
 ---
 

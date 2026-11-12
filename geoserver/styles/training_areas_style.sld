@@ -7,7 +7,6 @@
     <UserStyle>
       <FeatureTypeStyle>
 
-        <!-- Rule 1: active → green -->
         <Rule>
           <Name>active</Name>
           <ogc:Filter>
@@ -28,7 +27,6 @@
           </PolygonSymbolizer>
         </Rule>
 
-        <!-- Rule 2: closed for maintenance → grey, dashed border -->
         <Rule>
           <Name>maintenance</Name>
           <ogc:Filter>

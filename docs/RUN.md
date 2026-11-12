@@ -127,15 +127,33 @@ More in [SETUP.md, section 7](SETUP.md#7-troubleshooting).
 
 ---
 
-## 7. Client and server (coming later)
-
-These parts of the project don't exist yet. When they do, add here how to install
-dependencies, run them in development, and build them.
+## 7. Server and client
 
 ### Server (NestJS)
 
-_TODO: install, environment variables, `npm run start:dev`, port._
+With the infrastructure running (step 1), from the `server` folder:
+
+```powershell
+cd server
+pnpm install            # first time, or after pulling dependency changes
+pnpm dev                # http://localhost:3000, restarts on file changes
+```
+
+The first time, also copy `.env.example` to `.env`; the defaults match the
+local infrastructure.
+
+| What | Where |
+|---|---|
+| API docs (Swagger) | http://localhost:3000/docs |
+| Health check | http://localhost:3000/health |
+
+Stop it with `Ctrl+C`. More (scripts, tests, structure) in
+[server/README.md](../server/README.md).
+
+> If the server fails with `password authentication failed for user "postgres"`,
+> a PostgreSQL installed on Windows is taking port 5432. See the note in
+> [server/README.md](../server/README.md#getting-started).
 
 ### Client (React PWA)
 
-_TODO: install, `npm run dev`, port, how to test the PWA (install / offline)._
+_Coming later. TODO: install, `pnpm dev`, port, how to test the PWA (install / offline)._

@@ -54,7 +54,7 @@ function Invoke-GeoServerRest {
 }
 
 function Get-HttpStatusCode {
-    # Returns the HTTP status of a failed web request (works in PowerShell 5.1 and 7).
+    # PowerShell 5.1 and 7 expose the failed response differently; this handles both.
     param([Parameter(Mandatory)][System.Management.Automation.ErrorRecord]$ErrorRecord)
     $responseProperty = $ErrorRecord.Exception.PSObject.Properties['Response']
     if ($responseProperty -and $responseProperty.Value) {

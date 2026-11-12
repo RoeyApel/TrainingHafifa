@@ -18,3 +18,7 @@ both map layers in EPSG:32636, and verifies the result.
   (prerequisites, what each script does, troubleshooting).
 - **[docs/RUN.md](docs/RUN.md)**: running the project day to day (start, check,
   stop, URLs and logins).
+
+## Server
+
+NestJS API in [server/](server/): see [server/README.md](server/README.md).

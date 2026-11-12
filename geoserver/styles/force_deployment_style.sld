@@ -18,7 +18,6 @@
             </Stroke>
           </PolygonSymbolizer>
 
-          <!-- The label: takes its text from the unit_name column -->
           <TextSymbolizer>
             <Label><ogc:PropertyName>unit_name</ogc:PropertyName></Label>
             <Font>
@@ -31,7 +30,8 @@
                 <AnchorPoint><AnchorPointX>0.5</AnchorPointX><AnchorPointY>0.5</AnchorPointY></AnchorPoint>
               </PointPlacement>
             </LabelPlacement>
-            <Halo>  <!-- white outline so the text is readable over anything -->
+            <!-- White outline so the label stays readable over any fill or basemap. -->
+            <Halo>
               <Radius>2</Radius>
               <Fill><CssParameter name="fill">#FFFFFF</CssParameter></Fill>
             </Halo>

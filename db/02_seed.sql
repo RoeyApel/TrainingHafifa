@@ -1,8 +1,5 @@
--- =============================================================================
--- Sample data for force_deployment.
 -- Inserts rows only when the table is empty, so re-running never duplicates them.
 -- Coordinates are in meters (EPSG:32636), in the Negev.
--- =============================================================================
 
 INSERT INTO force_deployment
     (unit_name, troops_count, vehicles_count, commander_name, training_date, is_deleted, geom)

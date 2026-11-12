@@ -39,7 +39,6 @@
         DataDir      = 'C:\ProgramData\GeoServer'
         Workspace    = 'imunim'
         NamespaceUri = 'http://imunim'
-        # Hides soft-deleted features from every published layer.
         CqlFilter    = 'is_deleted = false'
     }
 
