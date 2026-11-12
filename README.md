@@ -14,5 +14,7 @@ On Windows with Docker Desktop running, from the repo root:
 This starts PostGIS, GeoServer and pgAdmin, creates the database table, publishes
 both map layers in EPSG:32636, and verifies the result.
 
-See **[docs/SETUP.md](docs/SETUP.md)** for prerequisites, what each script does,
-and troubleshooting.
+- **[docs/SETUP.md](docs/SETUP.md)**: first-time setup on a new computer
+  (prerequisites, what each script does, troubleshooting).
+- **[docs/RUN.md](docs/RUN.md)**: running the project day to day (start, check,
+  stop, URLs and logins).

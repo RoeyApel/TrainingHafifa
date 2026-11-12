@@ -71,6 +71,9 @@ That's all. It runs the four steps below in order, stops at the first failure, a
 ends with `All checks passed`. The first run takes several minutes while Docker
 downloads the images.
 
+After setup, see [RUN.md](RUN.md) for starting, checking and stopping the project
+day to day.
+
 Options:
 
 ```powershell
