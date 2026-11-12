@@ -1,0 +1,8 @@
+# Normalize text files; keep Windows line endings for PowerShell.
+* text=auto
+*.ps1  text eol=crlf
+*.psm1 text eol=crlf
+*.psd1 text eol=crlf
+
+# GeoPackage is a SQLite database: never touch its bytes.
+*.gpkg binary

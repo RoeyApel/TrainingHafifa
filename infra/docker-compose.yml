@@ -1,0 +1,60 @@
+services:
+  geoserver:
+    image: docker.osgeo.org/geoserver:2.26.1
+    container_name: geoserver
+    environment:
+      - INSTALL_EXTENSIONS=true
+      - STABLE_EXTENSIONS=importer
+      - CORS_ENABLED=true
+    ports:
+      - "8080:8080"
+    volumes:
+      - C:/ProgramData/GeoServer:/opt/geoserver_data
+    restart: always
+    networks:
+      - bridge_network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  postgis:
+    image: postgis/postgis:17-master
+    container_name: postgis
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Aa123456
+      - POSTGRES_DB=imunim
+    ports:
+        - "5432:5432" 
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - bridge_network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+      - PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED=False
+      - PGADMIN_CONFIG_SERVER_MODE=False
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    restart: always
+    networks:
+      - bridge_network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    
+volumes:
+    postgres-data:
+    pgadmin_data:
+    
+networks:
+    bridge_network:
+        driver: bridge
