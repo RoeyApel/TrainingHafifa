@@ -57,7 +57,7 @@ whatever is missing.
 | GeoServer admin | http://localhost:8080/geoserver | `admin` / `geoserver` |
 | GeoServer Layer Preview | http://localhost:8080/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage | |
 | pgAdmin | http://localhost:5050 | no login (server host: `postgis`) |
-| PostGIS (from your computer) | `localhost:5432`, database `imunim` | `postgres` / `Aa123456` |
+| PostGIS (from your computer) | `localhost:5434`, database `imunim` | `postgres` / `Aa123456` |
 
 Layer endpoints that the client app will use (workspace `imunim`, EPSG:32636):
 
@@ -151,8 +151,7 @@ Stop it with `Ctrl+C`. More (scripts, tests, structure) in
 [server/README.md](../server/README.md).
 
 > If the server fails with `password authentication failed for user "postgres"`,
-> a PostgreSQL installed on Windows is taking port 5432. See the note in
-> [server/README.md](../server/README.md#getting-started).
+> it reached a different PostgreSQL: check that `DB_PORT=5434` in `server/.env`.
 
 ### Client (React PWA)
 

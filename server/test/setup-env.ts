@@ -12,3 +12,4 @@ process.env.GEOSERVER_URL = 'http://localhost:8080/geoserver';
 process.env.GEOSERVER_USERNAME = 'test';
 process.env.GEOSERVER_PASSWORD = 'test';
 process.env.GEOSERVER_WORKSPACE = 'test';
+process.env.GEOSERVER_NAMESPACE_URI = 'http://test';

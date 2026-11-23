@@ -1,5 +1,5 @@
 import type { Params } from 'nestjs-pino';
-import type { LogLevel } from '../../config/env.validation.js';
+import type { LogLevel } from '../../types/config/types.js';
 
 const QUIET_ROUTE_SUFFIXES = ['/health'];
 

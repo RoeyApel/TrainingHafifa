@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { LoggerModule } from 'nestjs-pino';
 import { createLoggerParams } from './common/logging/logger.config.js';
 import { AppConfigModule } from './config/app-config.module.js';
-import type { EnvironmentVariables } from './config/env.validation.js';
+import type { EnvironmentVariables } from './types/config/types.js';
 import { DatabaseModule } from './database/database.module.js';
 import { ForcesModule } from './forces/forces.module.js';
 import { GeoServerModule } from './geoserver/geoserver.module.js';

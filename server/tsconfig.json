@@ -17,7 +17,9 @@
     "isolatedModules": true,
     "sourceMap": true,
     "skipLibCheck": true,
-    "types": ["node"]
+    "types": ["node"],
+    // jsts ships its .d.ts files in types/ without pointing to them.
+    "paths": { "jsts/*": ["./node_modules/jsts/types/*"] }
   },
-  "include": ["src/**/*.ts", "test/**/*.ts", "vitest.config.ts"]
+  "include": ["src/**/*.ts", "test/**/*.ts"]
 }

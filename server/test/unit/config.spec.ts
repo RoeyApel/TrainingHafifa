@@ -1,5 +1,6 @@
-import { describe, expect, it } from 'vitest';
-import { NodeEnv, validateEnv } from '../../src/config/env.validation.js';
+import { describe, expect, it } from '@jest/globals';
+import { NodeEnv } from '../../src/types/config/enums.js';
+import { validateEnv } from '../../src/config/env.validation.js';
 
 const REQUIRED_ENV = {
   DB_HOST: 'localhost',
@@ -10,6 +11,7 @@ const REQUIRED_ENV = {
   GEOSERVER_USERNAME: 'admin',
   GEOSERVER_PASSWORD: 'password',
   GEOSERVER_WORKSPACE: 'workspace',
+  GEOSERVER_NAMESPACE_URI: 'http://workspace',
 };
 
 describe('validateEnv', () => {
@@ -19,7 +21,7 @@ describe('validateEnv', () => {
     expect(env.NODE_ENV).toBe(NodeEnv.Development);
     expect(env.PORT).toBe(3000);
     expect(env.LOG_LEVEL).toBe('info');
-    expect(env.DB_PORT).toBe(5432);
+    expect(env.DB_PORT).toBe(5434);
   });
 
   it('coerces numeric variables', () => {

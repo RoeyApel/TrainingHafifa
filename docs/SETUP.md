@@ -18,7 +18,7 @@ project's mapping infrastructure on a Windows computer. The PowerShell scripts i
 
 | Piece | What it is | Where |
 |---|---|---|
-| **PostGIS** | PostgreSQL + spatial extension. Database `imunim`. | `localhost:5432` |
+| **PostGIS** | PostgreSQL + spatial extension. Database `imunim`. | `localhost:5434` (`postgis:5432` inside Docker) |
 | **GeoServer** | Map server that publishes the layers (WMS/WFS). | http://localhost:8080/geoserver |
 | **pgAdmin** | Web UI for browsing the database. | http://localhost:5050 |
 
@@ -40,8 +40,8 @@ appear in GeoServer.
 1. **Docker Desktop** for Windows, using the WSL 2 backend (the installer's default).
    Start it and wait for **"Engine running"**.
 2. **QGIS** (optional): only needed to *edit* the training areas.
-3. Free ports: **5432**, **8080**, **5050**. A locally installed PostgreSQL often
-   takes 5432; stop it first.
+3. Free ports: **5434**, **8080**, **5050**. PostGIS is published on 5434, not the
+   usual 5432, so it doesn't clash with a PostgreSQL installed on Windows.
 
 Check:
 
@@ -80,6 +80,8 @@ So **before running the scripts**, an AI assistant (e.g. Claude Code) must:
    - primary key and its constraint name (`primaryKeyConstraintName`)
    - geometry columns with their type and SRID, e.g. `geometry(Polygon, 32636)`
    - indexes with the same names (a spatial `@Index` becomes `USING GIST`)
+   - CHECK constraints with the same names and expressions (`@Check`); TypeORM
+     matches them by name only, so a renamed one is dropped and re-added
 3. Keep the file safe to re-run: `CREATE EXTENSION IF NOT EXISTS postgis;`,
    `CREATE TABLE IF NOT EXISTS`, `CREATE INDEX IF NOT EXISTS`.
 4. Check that `db/02_seed.sql` still matches the columns.
@@ -189,7 +191,7 @@ docker compose -f infra/docker-compose.yml down -v
 | Symptom | Cause | Fix |
 |---|---|---|
 | `Docker is installed but not running` | Docker Desktop is closed | Start it, wait for "Engine running" |
-| `port is already allocated` | Another program uses 5432/8080/5050 | Stop it (often a local PostgreSQL service) |
+| `port is already allocated` | Another program uses 5434/8080/5050 | Find it with `netstat -ano | findstr :5434` (or the other port) and stop it, or change that port mapping in `infra/docker-compose.yml` |
 | `running scripts is disabled on this system` | Execution policy | See "Allow running the scripts" above |
 | Access denied on `C:\ProgramData\GeoServer` | No write permission | Run PowerShell as Administrator once |
 | Timed out waiting for GeoServer | First boot is slow | Run `Setup.ps1` again; check `docker logs geoserver` |

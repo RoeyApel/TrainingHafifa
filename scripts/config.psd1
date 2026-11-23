@@ -23,6 +23,7 @@
         User     = 'postgres'
         Password = 'Aa123456'
         # How GeoServer reaches the database: the compose service name, not localhost.
+        # Port inside the Docker network; from Windows it is localhost:5434.
         Host     = 'postgis'
         Port     = 5432
         Schema   = 'public'

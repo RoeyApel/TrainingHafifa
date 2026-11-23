@@ -1,9 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
-export interface HealthStatus {
-  status: 'ok';
-}
+import type { HealthStatus } from '../types/health/types.js';
 
 @ApiTags('health')
 @Controller('health')

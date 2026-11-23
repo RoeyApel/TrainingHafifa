@@ -1,19 +1,25 @@
 import {
+  Check,
   Column,
   Entity,
   Index,
   type Polygon,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { SRID } from '../common/geo/spatial-reference.js';
+import { SRID } from '../types/geo/types.js';
 
 /**
  * GeoServer publishes this table as `imunim:force_deployment`.
  *
  * Column, index and constraint names match the existing table exactly, so
  * TypeORM's synchronize leaves the table (and GeoServer's layer) untouched.
+ * TypeORM matches CHECK constraints by name only: keep the name and the
+ * expression in sync with db/01_schema.sql.
  */
 @Entity({ name: 'force_deployment' })
+// Last line of defence: the API already rejects invalid polygons, this also
+// covers writes that bypass it. A NULL geometry passes (ST_IsValid is NULL).
+@Check('chk_force_deployment_geom_valid', 'ST_IsValid(geom)')
 export class ForceDeployment {
   @PrimaryGeneratedColumn({ primaryKeyConstraintName: 'force_deployment_pkey' })
   id: number;
