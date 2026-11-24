@@ -22,7 +22,7 @@ import {
   toFeatureId,
   toFeatureProperties,
   toForceId,
-} from './force-feature.mapper.js';
+} from '../mappers/force-feature.mapper.js';
 import { assessTrainingSafety } from './training-safety.js';
 import { SafetyOutcome } from '../types/forces/enums.js';
 

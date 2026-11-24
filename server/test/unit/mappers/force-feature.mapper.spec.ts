@@ -2,7 +2,7 @@ import { describe, expect, it } from '@jest/globals';
 import {
   toFeatureId,
   toForceId,
-} from '../../../src/forces/force-feature.mapper.js';
+} from '../../../src/mappers/force-feature.mapper.js';
 
 describe('force feature ids', () => {
   it('round-trips an id through the GeoServer feature id', () => {

@@ -46,7 +46,8 @@ src/
   config/                     env validation (fails fast on bad .env)
   database/                   TypeORM connection
   entities/                   TypeORM entities (force_deployment)
-  forces/                     force routes, safety rules, feature mapping
+  forces/                     force routes, safety rules
+  mappers/                    DTO ↔ GeoServer feature mapping (force ids, columns)
   geoserver/                  WFS client: XML builder/parser + HTTP service
   training-areas/             training areas (layer 1), read through WFS
   health/                     GET /health
