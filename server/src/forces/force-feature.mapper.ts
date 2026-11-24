@@ -11,12 +11,10 @@ export function toFeatureId(id: number): string {
   return `${FORCES_TYPE_NAME}.${id}`;
 }
 
-export function toForceId(featureId: string): number {
+/** Returns `undefined` when the feature id is not `force_deployment.<id>`. */
+export function toForceId(featureId: string): number | undefined {
   const match = FEATURE_ID_PATTERN.exec(featureId);
-  if (!match) {
-    throw new Error(`Unexpected force feature id: ${featureId}`);
-  }
-  return Number(match[1]);
+  return match ? Number(match[1]) : undefined;
 }
 
 /** Fields left `undefined` are omitted, so an edit only touches what changed. */

@@ -1,7 +1,9 @@
 import {
+  BadGatewayException,
   BadRequestException,
   ConflictException,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -35,6 +37,8 @@ type SavedSafety = Pick<ForceSaveResponseDto, 'outcome' | 'message'>;
  */
 @Injectable()
 export class ForcesService {
+  private readonly logger = new Logger(ForcesService.name);
+
   constructor(
     @InjectRepository(ForceDeployment)
     private readonly forcesRepository: Repository<ForceDeployment>,
@@ -50,7 +54,19 @@ export class ForcesService {
       is_deleted: false,
     });
 
-    return { id: toForceId(featureId), ...safety };
+    const id = toForceId(featureId);
+    if (id === undefined) {
+      // The row is saved, but its id can't be read back: the layer is likely
+      // published under another name or without its primary key.
+      this.logger.error(
+        { featureId },
+        'GeoServer returned an unexpected feature id',
+      );
+      throw new BadGatewayException(
+        'GeoServer saved the force but returned an unexpected feature id',
+      );
+    }
+    return { id, ...safety };
   }
 
   async update(

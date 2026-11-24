@@ -17,7 +17,7 @@ describe('force feature ids', () => {
     'force_deployment.-7',
     'training_areas.7',
     'none',
-  ])('rejects the malformed feature id %p', (featureId) => {
-    expect(() => toForceId(featureId)).toThrow(/Unexpected force feature id/);
+  ])('returns undefined for the malformed feature id %p', (featureId) => {
+    expect(toForceId(featureId)).toBeUndefined();
   });
 });

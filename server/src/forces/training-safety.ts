@@ -13,11 +13,11 @@ import { SafetyOutcome } from '../types/forces/enums.js';
 export function assessTrainingSafety(
   overlappingAreas: TrainingArea[],
 ): SafetyAssessment {
-  const outcome = decideOutcome(overlappingAreas);
+  const outcome = decideSafetyOutcome(overlappingAreas);
   return { outcome, message: SAFETY_MESSAGES[outcome] };
 }
 
-function decideOutcome(overlappingAreas: TrainingArea[]): SafetyOutcome {
+function decideSafetyOutcome(overlappingAreas: TrainingArea[]): SafetyOutcome {
   if (
     overlappingAreas.some(
       (area) => area.status === TrainingAreaStatus.Maintenance,

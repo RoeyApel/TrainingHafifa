@@ -1,4 +1,9 @@
-import { BadGatewayException, Injectable, Logger } from '@nestjs/common';
+import {
+  BadGatewayException,
+  GatewayTimeoutException,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { EnvironmentVariables } from '../types/config/types.js';
 import {
@@ -18,8 +23,12 @@ import {
   parseTransactionResponse,
   WfsError,
 } from './wfs-response.parser.js';
-
-const REQUEST_TIMEOUT_MS = 10_000;
+import {
+  isTimeout,
+  READ_TIMEOUT,
+  type Timeout,
+  WRITE_TIMEOUT,
+} from './request-timeouts.js';
 
 interface UpstreamResponse {
   status: number;
@@ -30,8 +39,8 @@ interface UpstreamResponse {
  * Client for the workspace's WFS endpoint.
  *
  * Writes use WFS-T (transactional WFS); this is the only place the server
- * writes features. Failures surface as 502 Bad Gateway, since the fault is
- * upstream of this API.
+ * writes features. Failures surface as 502 Bad Gateway (504 on a timeout),
+ * since the fault is upstream of this API.
  */
 @Injectable()
 export class GeoServerWfsService {
@@ -102,18 +111,24 @@ export class GeoServerWfsService {
       cql_filter: query.cqlFilter,
     });
 
-    const response = await this.request({ method: 'POST', body: form });
+    const response = await this.request(
+      { method: 'POST', body: form },
+      READ_TIMEOUT,
+    );
     return this.parseOrThrow(response, 'WFS GetFeature failed', (body) =>
       parseFeatureCollection<TProperties>(body),
     );
   }
 
   private async transact(xml: string): Promise<TransactionSummary> {
-    const response = await this.request({
-      method: 'POST',
-      headers: { 'Content-Type': 'text/xml' },
-      body: xml,
-    });
+    const response = await this.request(
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/xml' },
+        body: xml,
+      },
+      WRITE_TIMEOUT,
+    );
     return this.parseOrThrow(
       response,
       'WFS-T transaction was rejected',
@@ -122,18 +137,25 @@ export class GeoServerWfsService {
   }
 
   /**
-   * Sends a request and reads the whole body. The timeout covers the body
-   * too, so a stalled response is reported like an unreachable server.
+   * Sends a request and reads the whole body; the timeout covers the body
+   * too. A timeout is a 504, any other network failure a 502.
    */
-  private async request(init: RequestInit): Promise<UpstreamResponse> {
+  private async request(
+    init: RequestInit,
+    timeout: Timeout,
+  ): Promise<UpstreamResponse> {
     try {
       const response = await fetch(this.wfsUrl, {
         ...init,
         headers: { ...init.headers, Authorization: this.authorization },
-        signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+        signal: AbortSignal.timeout(timeout.ms),
       });
       return { status: response.status, body: await response.text() };
     } catch (error) {
+      if (isTimeout(error)) {
+        this.logger.error({ timeoutMs: timeout.ms }, timeout.message);
+        throw new GatewayTimeoutException(timeout.message);
+      }
       throw this.upstreamError('GeoServer is unreachable', String(error));
     }
   }

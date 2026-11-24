@@ -14,6 +14,7 @@ import {
   ApiBadRequestResponse,
   ApiConflictResponse,
   ApiCreatedResponse,
+  ApiGatewayTimeoutResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -32,6 +33,10 @@ const GEOSERVER_FAILED = 'GeoServer failed or is unreachable';
 @ApiTags('forces')
 @ApiBadRequestResponse({ description: 'Invalid request body or id' })
 @ApiBadGatewayResponse({ description: GEOSERVER_FAILED })
+@ApiGatewayTimeoutResponse({
+  description:
+    'GeoServer did not answer in time; a write may still have been saved',
+})
 @Controller('forces')
 export class ForcesController {
   constructor(private readonly forcesService: ForcesService) {}

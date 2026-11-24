@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import {
+  BadGatewayException,
   BadRequestException,
   ConflictException,
   NotFoundException,
@@ -98,6 +99,14 @@ describe('ForcesService', () => {
         new ConflictException('השטח המבוקש סגור לתחזוקה'),
       );
       expect(insertFeature).not.toHaveBeenCalled();
+    });
+
+    it('reports a 502 when GeoServer returns a feature id it cannot read', async () => {
+      insertFeature.mockResolvedValue('forces.fid-1a2b');
+
+      await expect(service.create(newForce)).rejects.toThrow(
+        BadGatewayException,
+      );
     });
   });
 

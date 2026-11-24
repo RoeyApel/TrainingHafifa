@@ -75,8 +75,11 @@ function findTopologyProblem(polygon: Polygon): string | undefined {
   if (validation.isValid()) return undefined;
 
   const error = validation.getValidationError();
-  const { x, y } = error.getCoordinate() as { x: number; y: number };
-  return `${error.getMessage()} at (${x}, ${y})`;
+  // Not every JTS validation error has a location.
+  const point = error.getCoordinate() as { x: number; y: number } | null;
+  return point
+    ? `${error.getMessage()} at (${point.x}, ${point.y})`
+    : error.getMessage();
 }
 
 function isRingOfPositionsInBounds(ring: unknown): ring is Position[] {
