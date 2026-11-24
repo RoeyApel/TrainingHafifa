@@ -1,7 +1,7 @@
 import { type INestApplication, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-export const SWAGGER_PATH = 'docs';
+const SWAGGER_PATH = 'docs';
 
 /**
  * Request-handling configuration shared by the real bootstrap and the tests,

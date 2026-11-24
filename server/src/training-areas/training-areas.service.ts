@@ -2,21 +2,13 @@ import { Injectable } from '@nestjs/common';
 import type { Polygon } from 'typeorm';
 import { polygonToEwkt } from '../common/geo/wkt.js';
 import { GeoServerWfsService } from '../geoserver/geoserver-wfs.service.js';
+import { toTrainingArea } from '../mappers/training-area.mapper.js';
 import {
   TRAINING_AREAS_GEOMETRY,
   TRAINING_AREAS_TYPE_NAME,
   type TrainingArea,
+  type TrainingAreaAttributes,
 } from '../types/training-areas/types.js';
-import {
-  type TrainingAreaStatus,
-  type TrainingType,
-} from '../types/training-areas/enums.js';
-
-interface TrainingAreaAttributes {
-  area_name: string;
-  training_type: TrainingType;
-  status: TrainingAreaStatus;
-}
 
 /**
  * Training areas live only in the GeoPackage GeoServer publishes, not in
@@ -47,10 +39,6 @@ export class TrainingAreasService {
         },
       );
 
-    return features.map(({ properties }) => ({
-      areaName: properties.area_name,
-      trainingType: properties.training_type,
-      status: properties.status,
-    }));
+    return features.map(toTrainingArea);
   }
 }

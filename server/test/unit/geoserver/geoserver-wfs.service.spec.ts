@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, jest } from '@jest/globals';
+import { afterAll, afterEach, describe, expect, it, jest } from '@jest/globals';
 import { BadGatewayException, GatewayTimeoutException } from '@nestjs/common';
 import type { ConfigService } from '@nestjs/config';
 import { GeoServerWfsService } from '../../../src/geoserver/geoserver-wfs.service.js';
@@ -22,6 +22,10 @@ describe('GeoServerWfsService', () => {
 
   afterEach(() => {
     fetchMock.mockReset();
+  });
+
+  afterAll(() => {
+    fetchMock.mockRestore();
   });
 
   it('reports a timed-out write as 504, warning that it may have been saved', async () => {

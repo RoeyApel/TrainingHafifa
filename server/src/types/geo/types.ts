@@ -19,6 +19,10 @@ export const SRID_BOUNDS = {
   maxY: 9_329_005.18,
 } as const;
 
+/** Every WFS request (reads and WFS-T writes) uses this protocol version. */
+export const WFS_SERVICE = 'WFS';
+export const WFS_VERSION = '1.1.0';
+
 /** Keeps requests to GeoServer a reasonable size. */
 export const MAX_POLYGON_POSITIONS = 5_000;
 

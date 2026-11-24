@@ -4,6 +4,8 @@ import {
   type FeatureProperties,
   type FeatureValue,
   SRS_NAME,
+  WFS_SERVICE,
+  WFS_VERSION,
   type WfsNamespace,
 } from '../types/geo/types.js';
 
@@ -70,8 +72,8 @@ function buildTransaction(
 ): string {
   return xmlBuilder.build({
     'wfs:Transaction': {
-      '@_service': 'WFS',
-      '@_version': '1.1.0',
+      '@_service': WFS_SERVICE,
+      '@_version': WFS_VERSION,
       ...OGC_NAMESPACES,
       [`@_xmlns:${namespace.prefix}`]: namespace.uri,
       ...operation,

@@ -11,6 +11,8 @@ import {
   type GetFeaturesQuery,
   SRS_NAME,
   type TransactionSummary,
+  WFS_SERVICE,
+  WFS_VERSION,
   type WfsFeature,
   type WfsNamespace,
 } from '../types/geo/types.js';
@@ -46,7 +48,7 @@ interface UpstreamResponse {
 export class GeoServerWfsService {
   private readonly logger = new Logger(GeoServerWfsService.name);
 
-  readonly wfsUrl: string;
+  private readonly wfsUrl: string;
   private readonly namespace: WfsNamespace;
   private readonly authorization: string;
 
@@ -101,8 +103,8 @@ export class GeoServerWfsService {
     // Sent as a form POST, not a GET query string: a filter holding a
     // detailed polygon is longer than GeoServer accepts in a URL.
     const form = new URLSearchParams({
-      service: 'WFS',
-      version: '1.1.0',
+      service: WFS_SERVICE,
+      version: WFS_VERSION,
       request: 'GetFeature',
       typeName: `${this.namespace.prefix}:${typeName}`,
       srsName: SRS_NAME,

@@ -47,7 +47,7 @@ src/
   database/                   TypeORM connection
   entities/                   TypeORM entities (force_deployment)
   forces/                     force routes, safety rules
-  mappers/                    DTO ↔ GeoServer feature mapping (force ids, columns)
+  mappers/                    domain ↔ GeoServer feature mapping (forces, training areas)
   geoserver/                  WFS client: XML builder/parser + HTTP service
   training-areas/             training areas (layer 1), read through WFS
   health/                     GET /health

@@ -9,6 +9,13 @@ export const TRAINING_AREAS_TYPE_NAME = 'training_areas';
 /** Name of the geometry attribute in the GeoPackage. */
 export const TRAINING_AREAS_GEOMETRY = 'geometry';
 
+/** A training area's attributes as GeoServer returns them (column names). */
+export interface TrainingAreaAttributes {
+  area_name: string;
+  training_type: TrainingType;
+  status: TrainingAreaStatus;
+}
+
 export interface TrainingArea {
   areaName: string;
   trainingType: TrainingType;
