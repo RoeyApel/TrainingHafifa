@@ -71,7 +71,7 @@ describe('ForcesService', () => {
       await expect(service.create(newForce)).resolves.toEqual({
         id: 7,
         outcome: SafetyOutcome.Approved,
-        message: 'האימון נקבע בהצלחה',
+        message: 'The training was scheduled successfully',
       });
       expect(insertFeature).toHaveBeenCalledWith(
         'force_deployment',
@@ -96,7 +96,7 @@ describe('ForcesService', () => {
       findIntersecting.mockResolvedValue([liveFireArea, maintenanceArea]);
 
       await expect(service.create(newForce)).rejects.toThrow(
-        new ConflictException('השטח המבוקש סגור לתחזוקה'),
+        new ConflictException('The requested area is closed for maintenance'),
       );
       expect(insertFeature).not.toHaveBeenCalled();
     });

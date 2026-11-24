@@ -96,11 +96,11 @@ writes that bypass the API.
 Before a create or edit is saved, GeoServer finds the training areas the
 polygon intersects (ECQL `INTERSECTS`). Touching a boundary counts.
 
-| Overlaps                 | Saved? | Response                                           |
-| ------------------------ | ------ | -------------------------------------------------- |
-| an area in `maintenance` | no     | `409` "השטח המבוקש סגור לתחזוקה" (red)             |
-| a `live_fire` area       | yes    | `outcome: "warning"` "התראת בטיחות חמורה" (orange) |
-| anything else / nothing  | yes    | `outcome: "approved"` "האימון נקבע בהצלחה" (green) |
+| Overlaps                 | Saved? | Response                                                                            |
+| ------------------------ | ------ | ----------------------------------------------------------------------------------- |
+| an area in `maintenance` | no     | `409` "The requested area is closed for maintenance" (red)                          |
+| a `live_fire` area       | yes    | `outcome: "warning"` "Severe safety warning: the area is a live-fire zone" (orange) |
+| anything else / nothing  | yes    | `outcome: "approved"` "The training was scheduled successfully" (green)             |
 
 An edit that changes only attributes re-checks the stored polygon. Other
 errors: `400` invalid body or id, `404` no active force with that id, `502`

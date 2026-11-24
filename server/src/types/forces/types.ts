@@ -19,9 +19,10 @@ import { SafetyOutcome } from './enums.js';
 export const FORCES_TYPE_NAME = 'force_deployment';
 
 export const SAFETY_MESSAGES = {
-  [SafetyOutcome.Blocked]: 'השטח המבוקש סגור לתחזוקה',
-  [SafetyOutcome.Warning]: 'התראת בטיחות חמורה',
-  [SafetyOutcome.Approved]: 'האימון נקבע בהצלחה',
+  [SafetyOutcome.Blocked]: 'The requested area is closed for maintenance',
+  [SafetyOutcome.Warning]:
+    'Severe safety warning: the area is a live-fire zone',
+  [SafetyOutcome.Approved]: 'The training was scheduled successfully',
 } as const satisfies Record<SafetyOutcome, string>;
 
 /** Matches the VARCHAR(100) columns of force_deployment. */

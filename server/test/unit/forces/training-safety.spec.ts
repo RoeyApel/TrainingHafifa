@@ -18,7 +18,7 @@ describe('assessTrainingSafety', () => {
   it('approves a force that overlaps no training area', () => {
     expect(assessTrainingSafety([])).toEqual({
       outcome: SafetyOutcome.Approved,
-      message: 'האימון נקבע בהצלחה',
+      message: 'The training was scheduled successfully',
     });
   });
 
@@ -36,7 +36,7 @@ describe('assessTrainingSafety', () => {
       assessTrainingSafety([area({ trainingType: TrainingType.LiveFire })]),
     ).toEqual({
       outcome: SafetyOutcome.Warning,
-      message: 'התראת בטיחות חמורה',
+      message: 'Severe safety warning: the area is a live-fire zone',
     });
   });
 
@@ -45,7 +45,7 @@ describe('assessTrainingSafety', () => {
       assessTrainingSafety([area({ status: TrainingAreaStatus.Maintenance })]),
     ).toEqual({
       outcome: SafetyOutcome.Blocked,
-      message: 'השטח המבוקש סגור לתחזוקה',
+      message: 'The requested area is closed for maintenance',
     });
   });
 
