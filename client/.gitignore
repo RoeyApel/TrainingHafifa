@@ -1,0 +1,39 @@
+# Dependencies
+/node_modules
+
+# Build output (dev-dist is the PWA service worker in dev mode)
+/dist
+/dist-ssr
+/dev-dist
+
+# Tests
+/coverage
+
+# Environment: Vite bakes VITE_* values into the bundle, so keep real values
+# local and commit only the example file.
+.env
+.env.*
+!.env.example
+*.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Caches
+.eslintcache
+.vite
+*.tsbuildinfo
+
+# Editors and OS
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.sw?
+.DS_Store
+Thumbs.db

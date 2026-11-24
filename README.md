@@ -22,3 +22,7 @@ both map layers in EPSG:32636, and verifies the result.
 ## Server
 
 NestJS API in [server/](server/): see [server/README.md](server/README.md).
+
+## Client
+
+React PWA in [client/](client/): see [client/README.md](client/README.md).
