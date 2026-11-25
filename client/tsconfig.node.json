@@ -16,5 +16,9 @@
     "skipLibCheck": true,
     "noEmit": true
   },
-  "include": ["vite.config.ts", "src/app/brand.ts"]
+  "include": [
+    "vite.config.ts",
+    "src/config/brand.ts",
+    "src/config/endpoints.ts"
+  ]
 }

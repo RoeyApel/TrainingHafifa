@@ -1,0 +1,11 @@
+/*
+ * OpenLayers places overlays (popups) with a transform from the map's
+ * top-left corner. In an RTL page an absolutely positioned box starts at the
+ * right edge instead, which puts popups in the wrong place and makes
+ * auto-pan scroll the map. Plain CSS on purpose: the Emotion RTL plugin
+ * would mirror `left` to `right`.
+ */
+.ol-overlay-container {
+  left: 0;
+  top: 0;
+}

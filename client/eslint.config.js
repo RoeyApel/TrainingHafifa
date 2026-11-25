@@ -24,6 +24,8 @@ export default defineConfig(
     },
     rules: {
       '@typescript-eslint/explicit-module-boundary-types': 'error',
+      // `const name = () => {}`, never the `function` keyword.
+      'func-style': ['error', 'expression'],
     },
   },
 );

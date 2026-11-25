@@ -6,12 +6,22 @@ and OpenLayers for the map.
 
 ## Getting started
 
-Prerequisites: Node.js 22.12+ and pnpm (`corepack enable`).
+Prerequisites: Node.js 22.12+, pnpm (`corepack enable`), the mapping
+infrastructure (`..\scripts\Setup.ps1`) and the API server (`pnpm --dir
+../server dev`). The map itself loads without them; the GeoServer layers,
+the details popup and saving need them.
 
 ```bash
 pnpm install
 pnpm dev               # http://localhost:5173
 ```
+
+The browser only talks to its own origin: the dev and preview servers proxy
+`/api/*` to the API server (dropping the `/api` prefix) and `/geoserver/*` to
+GeoServer, so neither needs CORS. The targets default to
+`http://localhost:3000` and `http://localhost:8080`; to change them, copy
+`.env.example` to `.env.local`. A production deployment needs the same two
+routes on its reverse proxy.
 
 ## Scripts
 
@@ -32,19 +42,38 @@ index.html                  entry page (lang="he", dir="rtl")
 vite.config.ts              Vite, PWA (manifest, service worker), vendor chunks, Vitest
 public/favicon.svg          source for every generated app icon
 src/
-  main.tsx                  mounts <App> inside the providers
-  app/                      app shell: layout, providers, theme, RTL cache, brand
-  features/map/             the map feature
-    components/MapView.tsx    element that hosts the map
-    hooks/useOlMap.ts         owns the OpenLayers map instance
-    config/map.config.ts      initial center, zoom limits
-    layers/                   map layers (OSM base layer)
-test/                       unit tests
+  main.tsx                  registers EPSG:32636, mounts <App> inside the providers
+  App.tsx                   the app's single screen: title bar over the map
+  AppProviders.tsx          query client, RTL styling, MUI theme
+  components/<Name>/        one folder per component: <Name>.tsx (+ its CSS) and an
+                            index.ts, so imports read `components/<Name>`
+  api/                      HTTP and GeoServer requests: axiosInstance, api
+    hooks/                  TanStack Query hooks: useIdentify, useForces,
+                            useSaveForce, useDeleteForce
+  hooks/                    other hooks: useMap, useMapClick, useMapZoom,
+                            useFitToGeometry, useGeoServerLayers,
+                            useForceEditor
+  mappers/                  GeoServer features → domain, domain → API body / form
+  types/<feature>/          shared types, one folder per feature (as in server/):
+    enums.ts                  enums
+    types.ts                  consts (at the top), types
+  contexts/                 React contexts (the map)
+  map/                      OpenLayers setup: createMap, OSM and WMS layers,
+                            projections
+  schemas/                  zod schemas (the force form)
+  state/                    reducers (the force editor's steps)
+  config/                   brand, endpoints, map view, query client
+  theme/                    MUI theme and the RTL style cache
+  utils/                    small pure helpers (date format, save messages)
+test/                       mirrors src/: api, components, mappers, schemas, ...
 ```
 
-Code is grouped by feature. New map content (forces, training areas) goes in
-its own folder under `features/` and adds layers to the map that `useOlMap`
-returns.
+As in the server, only what is shared between files lives in `types/`; a
+type or const used by a single file stays in that file.
+`components/MapScreen` is the one place that wires the map, the layers, the
+details popup and the force editor together. Every map layer, overlay and
+interaction is added to the single map from `useMap()` and removed again when
+its component unmounts.
 
 ## Why Vite and not Create React App
 
@@ -72,6 +101,40 @@ preview`, then DevTools → Application → Service workers / Manifest.
 
 ## Map
 
-The base map is OpenStreetMap through OpenLayers, in EPSG:3857 (the tiles'
-projection). The server's layers are in EPSG:32636; they will be reprojected
-when they are added to the map.
+The base map is OpenStreetMap, and the view is in EPSG:3857 (the tiles'
+projection). The data is in EPSG:32636: GeoServer reprojects the WMS images,
+WFS answers in EPSG:32636 and is read into map coordinates, and polygons are
+converted back to EPSG:32636 before they are sent to the API.
+
+### Layers
+
+Both layers are WMS images rendered by GeoServer with their SLD styles
+(`geoserver/styles/`): training areas below, forces above. Every WMS and WFS
+request carries `CQL_FILTER=is_deleted = false`, so GeoServer itself leaves
+out deleted features; the client never filters them. After a force is saved
+or deleted, the forces layer is re-requested.
+
+### Details popup
+
+A click on the map sends one WFS `GetFeature` per layer with
+`INTERSECTS(<geometry>, POINT(x y))` at the clicked point, and shows the
+training areas and forces found there. A new click cancels the previous
+request (TanStack Query).
+
+### Adding, editing and deleting forces
+
+| Action | Flow                                                                                        |
+| ------ | ------------------------------------------------------------------------------------------- |
+| Add    | "הוספת כוח" → click the corners, double-click to finish → fill the form → `POST /forces`    |
+| Edit   | Click the force → "עריכה" → drag the corners → "המשך" → edit the form → `PATCH /forces/:id` |
+| Delete | Click the force → "מחיקה" → confirm → `DELETE /forces/:id` (soft delete)                    |
+
+The server's safety check decides the result, shown as a colored message:
+green when saved, orange when saved in a live-fire area, red when the polygon
+touches an area closed for maintenance (`409`). On a red result, or an
+invalid polygon (`400`), the editor returns to the shape so it can be moved,
+keeping what was typed in the form.
+
+The steps live in one reducer (`state/forceEditorReducer.ts`),
+so an action that doesn't fit the current step is ignored, and map clicks
+open the details popup only when no edit is in progress.

@@ -1,7 +1,23 @@
 {
   "version": "0.0.1",
   "configurations": [
-    { "name": "client-dev", "runtimeExecutable": "pnpm", "runtimeArgs": ["--dir", "client", "dev"], "port": 5173 },
-    { "name": "client-preview", "runtimeExecutable": "pnpm", "runtimeArgs": ["--dir", "client", "preview", "--port", "4173", "--strictPort"], "port": 4173 }
+    {
+      "name": "server",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--dir", "server", "dev"],
+      "port": 3000
+    },
+    {
+      "name": "client-dev",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--dir", "client", "dev"],
+      "port": 5173
+    },
+    {
+      "name": "client-preview",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--dir", "client", "preview", "--port", "4173", "--strictPort"],
+      "port": 4173
+    }
   ]
 }

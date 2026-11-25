@@ -1,0 +1,1 @@
+export { ForceDetails } from './ForceDetails';

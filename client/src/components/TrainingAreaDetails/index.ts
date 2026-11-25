@@ -1,0 +1,1 @@
+export { TrainingAreaDetails } from './TrainingAreaDetails';

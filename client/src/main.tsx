@@ -1,7 +1,10 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { App } from './app/App';
-import { AppProviders } from './app/AppProviders';
+import { App } from './App';
+import { AppProviders } from './AppProviders';
+import { registerProjections } from './map/projections';
+
+registerProjections();
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
